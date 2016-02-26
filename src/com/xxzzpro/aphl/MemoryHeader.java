@@ -1,6 +1,6 @@
-package com.jugales.aphl;
+package com.xxzzpro.aphl;
 
-import com.jugales.aphl.MemoryComponent.DataType;
+import com.xxzzpro.aphl.MemoryComponent.DataType;
 
 /**
  * This Memory Header is a representative of the ROM header and its essential data. The key components in this 

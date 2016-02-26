@@ -1,4 +1,4 @@
-package com.jugales.aphl;
+package com.xxzzpro.aphl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,17 +9,25 @@ import java.lang.reflect.MalformedParametersException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import javax.activity.InvalidActivityException;
+
 /**
  * 
  * This memory component represents the Read-Only Memory (or ROM) we are interacting with and includes 
  * functionality to interact with the data it possesses such as Strings, integers, pointers, header info, ect. </br>
  * </br>
  * All changes to the ROM are not final until the save() function is used, and any changes be reverted to the 
- * previous save's (or initial ROM load) information using the revert() function.
+ * previous save's (or initial ROM load) information using the revert() function.</br>
+ * </br>
+ * After a ROM has been loaded via this class, the static method MemoryComponent.instance() will return the 
+ * instance of the ROM. This instance will be updated if any new ROM is loaded through this class.
  * 
  * @author Kurroku
  */
 public class MemoryComponent {
+	
+	/** The singleton instance of the current ROM */
+	private static MemoryComponent instance;
 	
 	/** Represents the ROM file itself */
 	protected final File romFile;
@@ -63,6 +71,8 @@ public class MemoryComponent {
 		// set the byte order of our buffers so that values we get and put are automatically converted
 		this.romBuffer.order(ByteOrder.LITTLE_ENDIAN);
 		this.backupBuffer.order(ByteOrder.LITTLE_ENDIAN);
+		
+		instance = this;
 	}
 	
 	/**
@@ -116,16 +126,14 @@ public class MemoryComponent {
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < length; i++)
 			builder.append((char) get(DataType.CHARACTER));
-			
 		return builder.toString();
 	}
 	
 	public void putAsciiString(String characters, int location) {
 		romBuffer.position(location);
 		
-		for (int i = 0; i < characters.length(); i++) {
+		for (int i = 0; i < characters.length(); i++)
 			put (characters.charAt(i), DataType.CHARACTER);
-		}
 	}
 	
 	/**
@@ -151,7 +159,7 @@ public class MemoryComponent {
 	 */
 	public String getGameString(int length, int location) {
 		if (length == -1)
-			length = 0x11111111;
+			length = 0x11111111; // Our max length (which I chose ambiguously)
 		
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < length; i++) {
@@ -161,7 +169,6 @@ public class MemoryComponent {
 				break;
 			builder.append(character);
 		}
-		
 		return builder.toString();
 	}
 	
@@ -215,7 +222,6 @@ public class MemoryComponent {
 			romBuffer.putInt((int) value & 0xFFFFFFFF);
 			break;
 		default:
-			break;
 		}
 	}
 	
@@ -225,10 +231,6 @@ public class MemoryComponent {
 	 * @param header The new ROM header to be written to the ROM buffer
 	 */
 	public void setHeader(MemoryHeader header) {
-		// TODO: Verify that the new header isn't the same as the old
-		// TODO: If it is the same, don't write. That's pointless.
-		// TODO: Verify that the values in the header are valid (no null title for example).
-		// TODO: If all is well, write the values of the new header to the respective ROM header locations.
 		putAsciiString(header.getGameCode(), 0xAC);
 		putAsciiString(header.getMakerCode(), 0xB0);
 		putAsciiString(header.getTitle(), 0xA0);
@@ -280,5 +282,20 @@ public class MemoryComponent {
 		SHORT,
 		INTEGER,
 		POINTER;
+	}
+	
+	/**
+	 * @return The singleton instance of the current ROM
+	 */
+	public static MemoryComponent instance() {
+		try {
+			if (instance == null)
+				throw new InvalidActivityException("Attempted to return null ROM instance");
+			else
+				return instance;
+		} catch (InvalidActivityException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
