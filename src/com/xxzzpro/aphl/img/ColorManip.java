@@ -34,7 +34,7 @@
 
 package com.xxzzpro.aphl.img;
 
-public static class Color
+public static class ColorManip
 {
     /**
      * 
