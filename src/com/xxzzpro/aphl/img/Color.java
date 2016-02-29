@@ -38,6 +38,14 @@ public class Color
 {
     private int rgbValue;
     
+    /**
+     * 
+     * @param isGBA Tells if <code>value</code> is a 15-bit GBA colour. Default     *              is 24-bit RGB colour.
+     * @param red   The red value to parse during instantiation.
+     * @param green The green value to parse during instantiation.
+     * @param blue  The blue value to parse during instantiation.
+     */
+    
     public Color(boolean isGBA, byte red, byte green, byte blue)
     {
         if(isGBA)
@@ -51,6 +59,12 @@ public class Color
         }
     }
     
+    /**
+     * 
+     * @param isGBA Tells if <code>value</code> is a 15-bit GBA colour. Default     *              is 24-bit RGB colour.
+     * @param value the colour value to instantiate the object with.
+     */
+    
     public Color(boolean isGBA, int value)
     {
         if(isGBA)
@@ -61,5 +75,45 @@ public class Color
         {
             this.rgbValue = value;
         }
+    }
+    
+    /**
+     * 
+     * @returns the GBA colour value of the colour object.
+     */
+    
+    public short getGBA()
+    {
+        return ColorManip.rgbToGBA(this.rgbValue);
+    }
+    
+    /**
+     * 
+     * @returns the RGB colour value of the colour object.
+     */
+    
+    public short getRGB()
+    {
+        return this.rgbValue;
+    }
+    
+    /**
+     * 
+     * @param value the GBA colour value to set the Color object to.
+     */
+    
+    public void setGBA(short value)
+    {
+        this.rgbValue = ColorManip.gbaToRGB(value);
+    }
+    
+    /**
+     * 
+     * @param value the RGB colour value to set the Color object to.
+     */
+    
+    public void setRGB(int value)
+    {
+        this.rgbValue = value;
     }
 }
