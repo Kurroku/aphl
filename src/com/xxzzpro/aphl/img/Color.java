@@ -62,7 +62,7 @@ public class Color
     /**
      * 
      * @param isGBA Tells if <code>value</code> is a 15-bit GBA colour. Default     *              is 24-bit RGB colour.
-     * @param value the colour value to instantiate the object with.
+     * @param value the colour value to instantiate the Color object with.
      */
     
     public Color(boolean isGBA, int value)
@@ -79,7 +79,7 @@ public class Color
     
     /**
      * 
-     * @returns the GBA colour value of the colour object.
+     * @returns the GBA colour value of the Color object.
      */
     
     public short getGBA()
@@ -89,7 +89,7 @@ public class Color
     
     /**
      * 
-     * @returns the RGB colour value of the colour object.
+     * @returns the RGB colour value of the Color object.
      */
     
     public short getRGB()
